@@ -1,0 +1,168 @@
+import { Product, ProductListing, Store } from '@/types'
+
+export const MOCK_STORES: Store[] = [
+  { id: 's1', name: 'RCMaster', url: 'https://rcmaster.in', logo_url: '' },
+  { id: 's2', name: 'QuadKart', url: 'https://quadkart.in', logo_url: '' },
+  { id: 's3', name: 'Robu.in', url: 'https://robu.in', logo_url: '' },
+]
+
+export const MOCK_PRODUCTS: Product[] = [
+  {
+    id: 'p1',
+    name: 'ImpulseRC Apex HD 5"',
+    brand: 'ImpulseRC',
+    category: 'frame',
+    description: 'Premium true-X freestyle frame built for DJI O3 / Walksnail Avatar. 6mm arms, 30x30 + 20x20 stack.',
+    image_url: 'https://placehold.co/400x300/1a1a2e/e94560?text=Apex+HD',
+    specs: { size_mm: 220, motor_mount_mm: '16x16', stack_mount_mm: '30x30', weight_g: 148, material: 'Carbon Fiber', prop_size: '5 inch' },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p2',
+    name: 'Flywoo Explorer LR 4"',
+    brand: 'Flywoo',
+    category: 'frame',
+    description: 'Lightweight long-range frame. Ultra-light 4" design for max flight time.',
+    image_url: 'https://placehold.co/400x300/1a1a2e/e94560?text=Explorer+LR',
+    specs: { size_mm: 168, motor_mount_mm: '12x12', stack_mount_mm: '20x20', weight_g: 58, material: 'Carbon Fiber', prop_size: '4 inch' },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p3',
+    name: 'Speedybee F405 V4',
+    brand: 'Speedybee',
+    category: 'flight_controller',
+    description: 'Betaflight F405 FC with built-in Bluetooth for wireless config. 30x30 stack.',
+    image_url: 'https://placehold.co/400x300/16213e/0f3460?text=F405+V4',
+    specs: { stack_mount_mm: '30x30', gyro: 'ICM-42688-P', processor: 'STM32F405', input_voltage: '3-6S', uart_count: 6, weight_g: 9 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p4',
+    name: 'Betafpv F722',
+    brand: 'Betafpv',
+    category: 'flight_controller',
+    description: '20x20 lightweight FC with F722 processor. Perfect for micro builds.',
+    image_url: 'https://placehold.co/400x300/16213e/0f3460?text=F722',
+    specs: { stack_mount_mm: '20x20', gyro: 'ICM-42688-P', processor: 'STM32F722', input_voltage: '2-6S', uart_count: 5, weight_g: 5 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p5',
+    name: 'Speedybee BLS 55A 4-in-1',
+    brand: 'Speedybee',
+    category: 'esc',
+    description: '55A BLHeli_S 4-in-1 ESC. 30x30 stack, supports DSHOT600.',
+    image_url: 'https://placehold.co/400x300/0f3460/e94560?text=55A+ESC',
+    specs: { stack_mount_mm: '30x30', current_a: 55, cell_count: '3-6S', protocol: 'DSHOT600', weight_g: 18 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p6',
+    name: 'Tekko32 F4 45A',
+    brand: 'iFlight',
+    category: 'esc',
+    description: '45A 32-bit 4-in-1 ESC. 20x20 mount, 4S capable.',
+    image_url: 'https://placehold.co/400x300/0f3460/e94560?text=Tekko32',
+    specs: { stack_mount_mm: '20x20', current_a: 45, cell_count: '3-4S', protocol: 'DSHOT600', weight_g: 10 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p7',
+    name: 'iFlight XING2 2207 1855KV',
+    brand: 'iFlight',
+    category: 'motor',
+    description: 'High-performance 2207 motor. 4S ideal, suits 5" builds.',
+    image_url: 'https://placehold.co/400x300/e94560/16213e?text=XING2+2207',
+    specs: { motor_mount_mm: '16x16', stator_size: '2207', kv: 1855, cell_count: '4-6S', max_current_a: 38, weight_g: 31 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p8',
+    name: 'T-Motor F60 Pro IV 2207',
+    brand: 'T-Motor',
+    category: 'motor',
+    description: 'Race-grade 2207 motor with titanium shaft. Smooth and efficient.',
+    image_url: 'https://placehold.co/400x300/e94560/16213e?text=F60+Pro',
+    specs: { motor_mount_mm: '16x16', stator_size: '2207', kv: 1950, cell_count: '4-6S', max_current_a: 42, weight_g: 33 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p9',
+    name: 'Tattu R-Line V3 1550mAh 4S',
+    brand: 'Tattu',
+    category: 'battery',
+    description: 'Race-spec 4S 1550mAh 120C LiPo. Consistent punch and discharge.',
+    image_url: 'https://placehold.co/400x300/e94560/1a1a2e?text=Tattu+4S',
+    specs: { cell_count: '4S', capacity_mah: 1550, discharge_c: 120, weight_g: 180, connector: 'XT60' },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p10',
+    name: 'HGLRC Rekon 5 5040 Props',
+    brand: 'HGLRC',
+    category: 'propeller',
+    description: 'Durable 5" tri-blade props. 16x16 mount compatible.',
+    image_url: 'https://placehold.co/400x300/1a1a2e/e94560?text=5040+Props',
+    specs: { size_inch: 5, pitch: 4, blade_count: 3, motor_mount_mm: '16x16', material: 'Polycarbonate' },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p11',
+    name: 'DJI O3 Air Unit',
+    brand: 'DJI',
+    category: 'vtx',
+    description: 'DJI O3 digital HD FPV system. 1080p/100fps, up to 10km range.',
+    image_url: 'https://placehold.co/400x300/16213e/e94560?text=DJI+O3',
+    specs: { stack_mount_mm: '20x20', power_mw: 1200, protocol: 'DJI O3', input_voltage: '7.4-26V', weight_g: 35 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+  {
+    id: 'p12',
+    name: 'ExpressLRS Radiomaster Ranger',
+    brand: 'Radiomaster',
+    category: 'receiver',
+    description: 'ELRS 2.4GHz receiver. Ultra-low latency, long range.',
+    image_url: 'https://placehold.co/400x300/0f3460/e94560?text=ELRS+Rx',
+    specs: { protocol: 'ELRS 2.4GHz', input_voltage: '4-8V', weight_g: 2 },
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01',
+  },
+]
+
+export const MOCK_LISTINGS: ProductListing[] = [
+  { id: 'l1', product_id: 'p1', store_id: 's1', price_inr: 12500, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[0] },
+  { id: 'l2', product_id: 'p1', store_id: 's2', price_inr: 12999, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[1] },
+  { id: 'l3', product_id: 'p1', store_id: 's3', price_inr: 11800, stock: 'out_of_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[2] },
+  { id: 'l4', product_id: 'p3', store_id: 's1', price_inr: 4200, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[0] },
+  { id: 'l5', product_id: 'p3', store_id: 's2', price_inr: 4500, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[1] },
+  { id: 'l6', product_id: 'p5', store_id: 's1', price_inr: 6800, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[0] },
+  { id: 'l7', product_id: 'p5', store_id: 's3', price_inr: 6500, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[2] },
+  { id: 'l8', product_id: 'p7', store_id: 's2', price_inr: 3800, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[1] },
+  { id: 'l9', product_id: 'p7', store_id: 's3', price_inr: 3600, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[2] },
+  { id: 'l10', product_id: 'p9', store_id: 's1', price_inr: 5200, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[0] },
+  { id: 'l11', product_id: 'p9', store_id: 's2', price_inr: 4900, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[1] },
+  { id: 'l12', product_id: 'p11', store_id: 's1', price_inr: 18500, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[0] },
+  { id: 'l13', product_id: 'p11', store_id: 's3', price_inr: 17999, stock: 'in_stock', product_url: '#', last_checked: '2024-03-01', store: MOCK_STORES[2] },
+]
+
+export function getProductListings(productId: string): ProductListing[] {
+  return MOCK_LISTINGS.filter((l) => l.product_id === productId)
+}
+
+export function getLowestPrice(productId: string): number | null {
+  const listings = getProductListings(productId).filter((l) => l.stock === 'in_stock')
+  if (!listings.length) return null
+  return Math.min(...listings.map((l) => l.price_inr))
+}
