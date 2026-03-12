@@ -18,7 +18,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2 text-white">
           <Zap className="h-6 w-6 text-[#e94560]" fill="currentColor" />
           <span className="text-xl font-bold tracking-tight">
-            FPV<span className="text-[#e94560]">India</span>
+            nare<span className="text-[#e94560]">nana</span>
           </span>
         </Link>
 

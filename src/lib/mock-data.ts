@@ -4,6 +4,9 @@ export const MOCK_STORES: Store[] = [
   { id: 's1', name: 'RCMaster', url: 'https://rcmaster.in', logo_url: '' },
   { id: 's2', name: 'QuadKart', url: 'https://quadkart.in', logo_url: '' },
   { id: 's3', name: 'Robu.in', url: 'https://robu.in', logo_url: '' },
+  { id: 's4', name: 'DRK Store', url: 'https://drkstore.in', logo_url: '' },
+  { id: 's5', name: 'FPV Guru', url: 'https://fpvguru.in', logo_url: '' },
+  { id: 's6', name: 'TujoRC', url: 'https://tujorc.com', logo_url: '' },
 ]
 
 export const MOCK_PRODUCTS: Product[] = [

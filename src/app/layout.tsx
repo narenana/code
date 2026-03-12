@@ -3,7 +3,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 
 export const metadata: Metadata = {
-  title: 'FPVIndia — FPV Parts Catalog & Compatibility Checker',
+  title: 'narenana — FPV Parts Catalog & Compatibility Checker',
   description: 'Compare FPV drone parts from Indian stores. Check motor, FC, ESC, frame compatibility before you buy.',
 }
 

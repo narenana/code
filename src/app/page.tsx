@@ -22,7 +22,7 @@ const FEATURES = [
   {
     icon: ShieldCheck,
     title: 'Price Comparison',
-    desc: 'See live prices from RCMaster, QuadKart, Robu and more. Always buy at the best price.',
+    desc: 'narenana aggregates live prices from RCMaster, QuadKart, Robu and more. Always buy at the best price.',
   },
 ]
 
@@ -36,7 +36,7 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#e9456020_0%,_transparent_70%)]" />
         <div className="relative mx-auto max-w-3xl">
           <span className="mb-4 inline-block rounded-full border border-[#e94560]/30 bg-[#e94560]/10 px-3 py-1 text-xs font-medium text-[#e94560]">
-            India&apos;s First FPV Parts Aggregator
+            narenana — India&apos;s FPV Parts Aggregator
           </span>
           <h1 className="mt-4 text-5xl font-extrabold leading-tight tracking-tight text-white">
             Find. Compare. <span className="text-[#e94560]">Fly.</span>
@@ -134,7 +134,7 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-white/10 py-8 text-center text-sm text-gray-600">
-        FPVIndia — Built for the Indian FPV community
+        narenana — Built for the Indian FPV community
       </footer>
     </div>
   )
