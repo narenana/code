@@ -1,0 +1,4 @@
+output/*.json
+output/*_checkpoint.json
+output/*_log.txt
+output/*_err.txt
