@@ -10,6 +10,10 @@ export type Category =
   | 'battery'
   | 'propeller'
   | 'charger'
+  | 'gps'
+  | 'antenna'
+  | 'accessory'
+  | 'other'
 
 export interface Product {
   id: string
@@ -64,6 +68,10 @@ export const CATEGORY_SPECS: Record<Category, string[]> = {
   battery: ['cell_count', 'capacity_mah', 'discharge_c', 'weight_g', 'connector'],
   propeller: ['size_inch', 'pitch', 'blade_count', 'motor_mount_mm', 'material'],
   charger: ['max_power_w', 'cell_count_max', 'connector', 'input_voltage'],
+  gps: ['protocol', 'baud_rate', 'weight_g'],
+  antenna: ['connector', 'frequency', 'gain_dbi', 'weight_g'],
+  accessory: ['weight_g'],
+  other: ['weight_g'],
 }
 
 export const CATEGORY_LABELS: Record<Category, string> = {
@@ -78,6 +86,10 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   battery: 'Battery',
   propeller: 'Propeller',
   charger: 'Charger',
+  gps: 'GPS',
+  antenna: 'Antenna',
+  accessory: 'Accessory',
+  other: 'Other',
 }
 
 export const COMPATIBILITY_PAIRS: Array<{

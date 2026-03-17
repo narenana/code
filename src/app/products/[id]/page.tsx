@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { MOCK_PRODUCTS, getProductListings } from '@/lib/mock-data'
+import { supabase } from '@/lib/supabase'
 import { CATEGORY_LABELS } from '@/types'
 import { formatPrice } from '@/lib/utils'
 import { ArrowLeft, ExternalLink, CheckCircle, XCircle, Clock } from 'lucide-react'
@@ -12,12 +12,20 @@ interface Props {
 
 export default async function ProductPage({ params }: Props) {
   const { id } = await params
-  const product = MOCK_PRODUCTS.find((p) => p.id === id)
-  if (!product) notFound()
 
-  const listings = getProductListings(product.id)
-  const inStock = listings.filter((l) => l.stock === 'in_stock')
-  const lowestPrice = inStock.length ? Math.min(...inStock.map((l) => l.price_inr)) : null
+  // Fetch product + listings + store info in one query
+  const { data: product, error } = await supabase
+    .from('products')
+    .select('*, product_listings(*, stores(*))')
+    .eq('id', id)
+    .single()
+
+  if (error || !product) notFound()
+
+  const listings = (product.product_listings ?? []) as any[]
+  const inStock = listings.filter((l: any) => l.stock === 'in_stock' && l.price_inr > 0)
+  const lowestPrice = inStock.length ? Math.min(...inStock.map((l: any) => l.price_inr)) : null
+  const specs: Record<string, string | number> = product.specs ?? {}
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -31,25 +39,31 @@ export default async function ProductPage({ params }: Props) {
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Image */}
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#12121e]">
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="h-full w-full object-cover"
-          />
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#12121e] flex items-center justify-center min-h-64">
+          {product.image_url ? (
+            <img
+              src={product.image_url}
+              alt={product.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="text-8xl select-none">📦</span>
+          )}
         </div>
 
         {/* Info */}
         <div className="flex flex-col gap-4">
           <div>
             <span className="rounded-full border border-white/10 bg-[#12121e] px-3 py-1 text-xs text-gray-400">
-              {CATEGORY_LABELS[product.category]}
+              {CATEGORY_LABELS[product.category as keyof typeof CATEGORY_LABELS] ?? product.category}
             </span>
             <p className="mt-2 text-sm text-gray-500">{product.brand}</p>
             <h1 className="mt-1 text-3xl font-extrabold text-white">{product.name}</h1>
           </div>
 
-          <p className="text-gray-400">{product.description}</p>
+          {product.description && (
+            <p className="text-gray-400">{product.description}</p>
+          )}
 
           {lowestPrice && (
             <div className="rounded-xl border border-[#e94560]/20 bg-[#e94560]/5 p-4">
@@ -59,17 +73,19 @@ export default async function ProductPage({ params }: Props) {
           )}
 
           {/* Specs */}
-          <div className="rounded-xl border border-white/10 bg-[#12121e] p-4">
-            <h2 className="mb-3 text-sm font-semibold text-white uppercase tracking-wider">Specifications</h2>
-            <div className="grid grid-cols-2 gap-2">
-              {Object.entries(product.specs).map(([key, value]) => (
-                <div key={key} className="flex flex-col">
-                  <span className="text-xs text-gray-500 capitalize">{key.replace(/_/g, ' ')}</span>
-                  <span className="text-sm font-medium text-white">{String(value)}</span>
-                </div>
-              ))}
+          {Object.keys(specs).length > 0 && (
+            <div className="rounded-xl border border-white/10 bg-[#12121e] p-4">
+              <h2 className="mb-3 text-sm font-semibold text-white uppercase tracking-wider">Specifications</h2>
+              <div className="grid grid-cols-2 gap-2">
+                {Object.entries(specs).map(([key, value]) => (
+                  <div key={key} className="flex flex-col">
+                    <span className="text-xs text-gray-500 capitalize">{key.replace(/_/g, ' ')}</span>
+                    <span className="text-sm font-medium text-white">{String(value)}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Compatibility shortcut */}
           <Link
@@ -88,9 +104,9 @@ export default async function ProductPage({ params }: Props) {
           <p className="text-gray-500">No listings found for this product yet.</p>
         ) : (
           <div className="flex flex-col gap-3">
-            {listings
+            {[...listings]
               .sort((a, b) => a.price_inr - b.price_inr)
-              .map((listing) => (
+              .map((listing: any) => (
                 <div
                   key={listing.id}
                   className={cn(
@@ -102,7 +118,9 @@ export default async function ProductPage({ params }: Props) {
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
-                      <span className="font-semibold text-white">{listing.store?.name}</span>
+                      <span className="font-semibold text-white">
+                        {listing.stores?.name ?? listing.store_id}
+                      </span>
                       <span className="flex items-center gap-1 text-xs">
                         {listing.stock === 'in_stock' ? (
                           <>
@@ -151,9 +169,11 @@ export default async function ProductPage({ params }: Props) {
               ))}
           </div>
         )}
-        <p className="mt-3 text-xs text-gray-600">
-          Prices last updated: {listings[0]?.last_checked ?? 'N/A'} — prices may vary.
-        </p>
+        {listings[0]?.last_checked && (
+          <p className="mt-3 text-xs text-gray-600">
+            Prices last updated: {new Date(listings[0].last_checked).toLocaleDateString('en-IN')} — prices may vary.
+          </p>
+        )}
       </div>
     </div>
   )

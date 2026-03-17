@@ -1,14 +1,23 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import ProductCard from '@/components/ProductCard'
-import { MOCK_PRODUCTS } from '@/lib/mock-data'
-import { CATEGORY_LABELS, Category } from '@/types'
+import { supabase } from '@/lib/supabase'
+import { CATEGORY_LABELS, Category, Product, ProductListing } from '@/types'
 import { Search, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as Category[]
+
+type ProductWithListings = Product & { product_listings: ProductListing[] }
+
+function getLowestPrice(listings: ProductListing[]): number | null {
+  const prices = listings
+    .filter((l) => l.stock !== 'out_of_stock' && l.price_inr > 0)
+    .map((l) => l.price_inr)
+  return prices.length > 0 ? Math.min(...prices) : null
+}
 
 function CatalogContent() {
   const searchParams = useSearchParams()
@@ -16,23 +25,46 @@ function CatalogContent() {
 
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(initialCategory)
+  const [products, setProducts] = useState<ProductWithListings[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoading(true)
+      setError(null)
+      const { data, error: fetchError } = await supabase
+        .from('products')
+        .select('*, product_listings(*)')
+        .order('name')
+
+      if (fetchError) {
+        console.error('Supabase error:', fetchError)
+        setError('Failed to load products. Is the local Supabase running?')
+      } else {
+        setProducts((data as ProductWithListings[]) ?? [])
+      }
+      setLoading(false)
+    }
+    fetchProducts()
+  }, [])
 
   const filtered = useMemo(() => {
-    return MOCK_PRODUCTS.filter((p) => {
+    return products.filter((p) => {
       const matchCat = !selectedCategory || p.category === selectedCategory
       const matchSearch =
         !search ||
         p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.brand.toLowerCase().includes(search.toLowerCase())
+        (p.brand ?? '').toLowerCase().includes(search.toLowerCase())
       return matchCat && matchSearch
     })
-  }, [search, selectedCategory])
+  }, [products, search, selectedCategory])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <h1 className="mb-2 text-3xl font-extrabold text-white">FPV Parts Catalog</h1>
       <p className="mb-8 text-gray-400">
-        {MOCK_PRODUCTS.length} parts aggregated from Indian FPV stores
+        {loading ? 'Loading parts…' : `${products.length} parts aggregated from Indian FPV stores`}
       </p>
 
       {/* Filters */}
@@ -82,19 +114,46 @@ function CatalogContent() {
         </div>
       </div>
 
-      {/* Results */}
-      {filtered.length === 0 ? (
-        <div className="py-20 text-center text-gray-500">
-          No parts found. Try a different search or category.
+      {/* Error state */}
+      {error && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+          ⚠️ {error}
         </div>
-      ) : (
+      )}
+
+      {/* Loading skeleton */}
+      {loading && (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-72 animate-pulse rounded-xl border border-white/5 bg-[#12121e]"
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Results */}
+      {!loading && !error && (
         <>
-          <p className="mb-4 text-sm text-gray-500">{filtered.length} results</p>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filtered.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {filtered.length === 0 ? (
+            <div className="py-20 text-center text-gray-500">
+              No parts found. Try a different search or category.
+            </div>
+          ) : (
+            <>
+              <p className="mb-4 text-sm text-gray-500">{filtered.length} results</p>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {filtered.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    lowestPrice={getLowestPrice(product.product_listings)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </>
       )}
     </div>
