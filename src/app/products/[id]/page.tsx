@@ -13,10 +13,10 @@ interface Props {
 export default async function ProductPage({ params }: Props) {
   const { id } = await params
 
-  // Fetch product + listings + store info in one query
+  // Fetch product + listings + store info + manufacturer in one query
   const { data: product, error } = await supabase
     .from('products')
-    .select('*, product_listings(*, stores(*))')
+    .select('*, product_listings(*, stores(*)), manufacturers(*)')
     .eq('id', id)
     .single()
 
@@ -57,7 +57,25 @@ export default async function ProductPage({ params }: Props) {
             <span className="rounded-full border border-white/10 bg-[#12121e] px-3 py-1 text-xs text-gray-400">
               {CATEGORY_LABELS[product.category as keyof typeof CATEGORY_LABELS] ?? product.category}
             </span>
-            <p className="mt-2 text-sm text-gray-500">{product.brand}</p>
+            <div className="mt-2 flex items-center gap-2">
+              {(product as any).manufacturers?.website ? (
+                <a
+                  href={(product as any).manufacturers.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[#e94560] hover:underline"
+                >
+                  {product.brand}
+                </a>
+              ) : (
+                <p className="text-sm text-gray-500">{product.brand}</p>
+              )}
+              {(product as any).manufacturers?.country && (
+                <span className="rounded-full border border-white/10 bg-[#12121e] px-2 py-0.5 text-xs text-gray-500">
+                  {(product as any).manufacturers.country}
+                </span>
+              )}
+            </div>
             <h1 className="mt-1 text-3xl font-extrabold text-white">{product.name}</h1>
           </div>
 

@@ -15,6 +15,16 @@ export type Category =
   | 'accessory'
   | 'other'
 
+export interface Manufacturer {
+  id: string
+  name: string
+  slug: string
+  website: string | null
+  country: string | null
+  description: string | null
+  logo_url: string | null
+}
+
 export interface Product {
   id: string
   name: string
@@ -23,6 +33,8 @@ export interface Product {
   description: string
   image_url: string
   specs: Record<string, string | number>
+  manufacturer_id: string | null
+  manufacturer?: Manufacturer
   created_at: string
   updated_at: string
 }
