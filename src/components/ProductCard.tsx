@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { Product, CATEGORY_LABELS } from '@/types'
 import { formatPrice } from '@/lib/utils'
-import { getLowestPrice as mockLowestPrice } from '@/lib/mock-data'
 import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface Props {
   product: Product
+  lowestPrice?: number | null
   className?: string
 }
 
@@ -22,11 +22,13 @@ const CATEGORY_COLORS: Record<string, string> = {
   battery: 'bg-emerald-500/20 text-emerald-300',
   propeller: 'bg-cyan-500/20 text-cyan-300',
   charger: 'bg-indigo-500/20 text-indigo-300',
+  gps: 'bg-lime-500/20 text-lime-300',
+  antenna: 'bg-sky-500/20 text-sky-300',
+  accessory: 'bg-violet-500/20 text-violet-300',
+  other: 'bg-gray-500/20 text-gray-300',
 }
 
-export default function ProductCard({ product, className }: Props) {
-  const lowestPrice = mockLowestPrice(product.id)
-
+export default function ProductCard({ product, lowestPrice, className }: Props) {
   return (
     <Link
       href={`/products/${product.id}`}
@@ -36,17 +38,23 @@ export default function ProductCard({ product, className }: Props) {
       )}
     >
       <div className="relative h-44 w-full overflow-hidden bg-[#0d0d1a]">
-        <img
-          src={product.image_url}
-          alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+        {product.image_url ? (
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-gray-700 text-4xl select-none">
+            📦
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-2">
           <span className={cn('rounded-full px-2 py-0.5 text-xs font-medium', CATEGORY_COLORS[product.category] ?? 'bg-gray-500/20 text-gray-300')}>
-            {CATEGORY_LABELS[product.category]}
+            {CATEGORY_LABELS[product.category] ?? product.category}
           </span>
         </div>
 
@@ -64,7 +72,7 @@ export default function ProductCard({ product, className }: Props) {
               <p className="font-bold text-[#e94560] text-lg">{formatPrice(lowestPrice)}</p>
             </div>
           ) : (
-            <p className="text-sm text-gray-500">Out of stock</p>
+            <p className="text-sm text-gray-500">Price unavailable</p>
           )}
           <span className="flex items-center gap-1 text-xs text-gray-500 group-hover:text-[#e94560] transition-colors">
             View <ExternalLink className="h-3 w-3" />
